@@ -1,0 +1,48 @@
+import unittest
+from project4 import HashMap, MinHeap, dijkstra, insert_edge, enqueue, dequeue
+# Unit tests
+class TestHashMapInsert(unittest.TestCase):
+    def test_insert(self):
+        graph = HashMap(capacity=4)
+        graph = insert_edge(graph, "A", "B", 4)
+        expected = [(' ', []), ("A", [("B", 4)]), (' ', []), (' ', [])]
+        self.assertEqual(graph.data, expected)
+
+
+
+class TestMinHeapExtractMin(unittest.TestCase):
+    def test_extract_min(self):
+        heap = MinHeap()
+        heap = enqueue(heap, ("A", 3))
+        heap = enqueue(heap, ("B", 1))
+        heap, min_element = dequeue(heap)
+        self.assertEqual(min_element, ("B", 1))
+        self.assertEqual(heap.data, [("A", 3)])
+
+class TestMinHeapInsert(unittest.TestCase):
+    def test_insert(self):
+        heap = MinHeap()
+        heap = enqueue(heap, ("A", 3))
+        heap = enqueue(heap, ("B", 1))
+        self.assertEqual(heap.data, [("B", 1), ("A", 3)])
+
+class TestDijkstra(unittest.TestCase):
+    def test_dijkstra(self):
+        graph = HashMap(capacity=4)
+        graph = insert_edge(graph, "A", "B", 4)
+        graph = insert_edge(graph, "A", "C", 1)
+        graph = insert_edge(graph, "B", "D", 1)
+        graph = insert_edge(graph, "C", "B", 2)
+        graph = insert_edge(graph, "C", "D", 5)
+        graph = insert_edge(graph, "D", "C", 4)
+        
+        distances, parents = dijkstra(graph, "A")
+        
+        expected_distances = {'A': 0, 'B': 3, 'C': 1, 'D': 4}
+        expected_parents = {'A': 'A', 'B': 'C', 'C': 'A', 'D': 'B'}
+        
+        self.assertEqual(distances, expected_distances)
+        self.assertEqual(parents, expected_parents)
+
+if __name__ == "__main__":
+    unittest.main()
